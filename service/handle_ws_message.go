@@ -19,7 +19,7 @@ type Handler interface {
 	hearBeat(ctx context.Context, message model.HeartbeatMessage) //心跳
 	danmuku(ctx context.Context, message model.Message)           //弹幕库
 	sendGift(ctx context.Context, message model.GiftMessage)
-	buyGuard()                                                     // 航海服务
+	buyGuard(ctx context.Context, message model.GuardMessage)      // 航海服务
 	superChat(ctx context.Context, message model.SuperChatMessage) // sc
 }
 
@@ -37,8 +37,8 @@ func (handler *BaseHandler) sendGift(ctx context.Context, message model.GiftMess
 	log.Printf("%s, %s ,:%s, %s", green(message.Data.UID), blue(message.Data.Uname), yellow(message.Data.GiftName+" * "+strconv.Itoa(message.Data.Num)), message.Data.CoinType+" * "+strconv.Itoa(message.Data.TotalCoin))
 }
 
-func (handler *BaseHandler) buyGuard() {
-
+func (handler *BaseHandler) buyGuard(ctx context.Context, message model.GuardMessage) {
+	log.Printf("%s, %s ,:%s, %d 天", green(message.Data.Uid), blue(message.Data.UserName), yellow(message.Data.GiftName+" * "+strconv.Itoa(message.Data.Num)), (message.Data.EndTime-message.Data.StartTime)/(60*60*24/1000))
 }
 
 func (handler *BaseHandler) superChat(ctx context.Context, message model.SuperChatMessage) {

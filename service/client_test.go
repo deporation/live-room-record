@@ -1,35 +1,40 @@
 package service
 
 import (
-	"fmt"
-	"live-room/model"
-	"runtime"
 	"testing"
 	"time"
 )
 
-func TestClient(t *testing.T) {
-	num := runtime.NumCPU() //这里得到当前所有的cpu数量
-	fmt.Printf("couNum=%v\n", num)
+func TestMengci(t *testing.T) {
 	client := BliveClient{}
 	go func() {
 		time.Sleep(30 * time.Minute)
 		client.Close()
 	}()
-	err := client.Start(model.RoomId, &BaseHandler{})
+	err := client.Start(2267110, &BaseHandler{})
 	if err != nil {
 		return
 	}
 }
-func TestLovely(t *testing.T) {
-	num := runtime.NumCPU() //这里得到当前所有的cpu数量
-	fmt.Printf("couNum=%v\n", num)
+func TestHair(t *testing.T) {
 	client := BliveClient{}
 	go func() {
 		time.Sleep(30 * time.Minute)
 		client.Close()
 	}()
-	err := client.Start(21692711, &BaseHandler{})
+	err := client.Start(14343955, &BaseHandler{})
+	if err != nil {
+		return
+	}
+}
+func TestHuahua(t *testing.T) {
+
+	client := BliveClient{}
+	go func() {
+		time.Sleep(30 * time.Minute)
+		client.Close()
+	}()
+	err := client.Start(7688602, &BaseHandler{})
 	if err != nil {
 		return
 	}

@@ -165,6 +165,22 @@ type GiftMessage struct {
 	} `json:"data"`
 }
 
+// GuardMessage 上舰信息
+type GuardMessage struct {
+	Cmd  string `json:"cmd"`
+	Data struct {
+		Uid        int    //用户id
+		UserName   string //用户名
+		GuardLevel int    //舰队等级，0非舰队，1总督，2提督，3舰长
+		Num        int    //数量
+		Price      int    //单价金瓜子数
+		GiftId     int    //礼物id
+		GiftName   string //礼物名
+		StartTime  int64  //开始时间戳
+		EndTime    int64  //结束时间戳
+	} `json:"data"`
+}
+
 type InteractWord struct {
 	Cmd string `json:"cmd"`
 
@@ -238,19 +254,6 @@ type ComboSend struct {
 		} `json:"medal_info"`
 		ComboTotalCoin int `json:"combo_total_coin"`
 	} `json:"data"`
-}
-
-// GuardBuyMessage 上舰消息
-type GuardBuyMessage struct {
-	Uid        int    //用户id
-	UserName   string //用户名
-	GuardLevel int    //舰队等级，0非舰队，1总督，2提督，3舰长
-	Num        int    //数量
-	Price      int    //单价金瓜子数
-	GiftId     int    //礼物id
-	GiftName   string //礼物名
-	StartTime  int    //开始时间戳
-	EndTime    int    //结束时间戳
 }
 
 // SuperChatMessage sc醒目留言

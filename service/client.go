@@ -299,11 +299,17 @@ func (client *BliveClient) handle(ctx context.Context) {
 				break
 			case GUARD_BUY:
 				log.Println(string(msg.Buffer))
+				var guard model.GuardMessage
+				err := json.Unmarshal(msg.Buffer, &guard)
+				if err != nil {
+					log.Printf("json 异常")
+					return
+				}
+				go client.handler.buyGuard(ctx, guard)
 				break
 			}
 
 		default:
-			log.Printf("operate is %d", msg.Operation)
 			break
 		}
 	}
@@ -329,13 +335,4 @@ func brotliInflate(src []byte) []byte {
 	fmt.Println("brotli 解析", string(res))
 	fmt.Println("brotli 调用:", k)
 	return res
-}
-
-func newMessage(header *model.WsHeader, data []byte) *model.ReceiveMessage {
-	var msg model.ReceiveMessage
-
-	msg.WsHeader = *header
-
-	msg.Body = data
-	return &msg
 }
