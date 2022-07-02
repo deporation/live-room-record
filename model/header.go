@@ -1,9 +1,9 @@
 package model
 
 type WsHeader struct {
-	Length        *int32
-	RawHeaderSize *int16
-	Ver           *int16
-	Operate       *int32
-	Seq           *int32
+	PacketLen uint32 // 4
+	HeaderLen uint16 // 2
+	Version   uint16 // 2
+	Operation uint32 // 4
+	Sequence  uint32 // 4
 }

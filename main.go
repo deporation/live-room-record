@@ -8,4 +8,5 @@ import (
 func main() {
 	client := service.BliveClient{}
 	client.Start(model.RoomId, &service.BaseHandler{})
+	defer client.Close()
 }

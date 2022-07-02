@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -125,14 +126,16 @@ func (wsc *ClientManager) readMsgThread() {
 }
 
 // Start 开启服务并重连
-func (wsc *ClientManager) Start() {
-	go func() {
-		for {
+func (wsc *ClientManager) Start(ctx context.Context) {
+	for {
+		select {
+		case <-ctx.Done():
+		default:
 			if wsc.isAlive == false {
 				wsc.dail()
 				wsc.sendMsgThread()
 				wsc.readMsgThread()
 			}
 		}
-	}()
+	}
 }

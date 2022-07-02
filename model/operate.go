@@ -1,10 +1,6 @@
 package model
 
 const (
-	RoomId = 22992234
-)
-
-const (
 	HANDSHAKE         = 0
 	HANDSHAKE_REPLY   = 1
 	HEARTBEAT         = 2
