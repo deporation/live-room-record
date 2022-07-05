@@ -2,10 +2,6 @@ package model
 
 import "github.com/tidwall/gjson"
 
-const (
-	RoomId = 411318
-)
-
 func ParaseMessage(src []gjson.Result) *Message {
 	var message Message
 	base := src[0].Array()
@@ -97,12 +93,14 @@ type Message struct {
 	Title     string //头衔
 
 	PrivilegeType int //舰队类型，0非舰队，1总督，2提督，3舰长
+	RoomId        int
 }
 
 //GiftMessage 礼物消息
 type GiftMessage struct {
-	Cmd  string `json:"cmd"`
-	Data struct {
+	Cmd    string `json:"cmd"`
+	RoomId int
+	Data   struct {
 		Draw              int         `json:"draw"`
 		Gold              int         `json:"gold"`
 		Silver            int         `json:"silver"`
@@ -179,6 +177,7 @@ type GuardMessage struct {
 		StartTime  int64  //开始时间戳
 		EndTime    int64  //结束时间戳
 	} `json:"data"`
+	RoomId int
 }
 
 type InteractWord struct {

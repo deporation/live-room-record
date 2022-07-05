@@ -27,22 +27,24 @@ const (
 )
 
 const (
-	DANMU_MSG          = "DANMU_MSG"
-	SEND_GIFT          = "SEND_GIFT"
-	SUPER_CHAT_MESSAGE = "SUPER_CHAT_MESSAGE"
-	GUARD_BUY          = "GUARD_BUY"
-	ROOM_RANK          = "ROOM_RANK"
-	INTERACT_WORD      = "INTERACT_WORD"
-	ONLINE_RANK_V2     = "ONLINE_RANK_V2"
-	ONLINE_RANK_TOP3   = "ONLINE_RANK_TOP3"
-	ONLINE_RANK_COUNT  = "ONLINE_RANK_COUNT"
-	COMBO_SEND         = "COMBO_SEND"
-	WIDGET_BANNER      = "WIDGET_BANNER"
-	ENTRY_EFFECT       = "ENTRY_EFFECT"
-	RQZ                = "RQZ"
-	DEFAULT            = "DEFAULT"
-	LIVE               = "LIVE"
-	PREPARING          = "PREPARING"
+	DANMU_MSG                     = "DANMU_MSG"
+	SEND_GIFT                     = "SEND_GIFT"
+	SUPER_CHAT_MESSAGE            = "SUPER_CHAT_MESSAGE"
+	GUARD_BUY                     = "GUARD_BUY"
+	ROOM_RANK                     = "ROOM_RANK"
+	ROOM_REAL_TIME_MESSAGE_UPDATE = "ROOM_REAL_TIME_MESSAGE_UPDATE"
+	ROOM_CHANGE                   = "ROOM_CHANGE"
+	INTERACT_WORD                 = "INTERACT_WORD"
+	ONLINE_RANK_V2                = "ONLINE_RANK_V2"
+	ONLINE_RANK_TOP3              = "ONLINE_RANK_TOP3"
+	ONLINE_RANK_COUNT             = "ONLINE_RANK_COUNT"
+	COMBO_SEND                    = "COMBO_SEND"
+	WIDGET_BANNER                 = "WIDGET_BANNER"
+	ENTRY_EFFECT                  = "ENTRY_EFFECT"
+	RQZ                           = "RQZ"
+	DEFAULT                       = "DEFAULT"
+	LIVE                          = "LIVE"
+	PREPARING                     = "PREPARING"
 )
 
 type BliveClient struct {
@@ -113,11 +115,12 @@ func (client *BliveClient) clientInit() {
 }
 
 func (client *BliveClient) Close() {
+
+	client.conn.Close()
 	close(client.heartBeatErr)
 	close(client.recieveErr)
 	close(client.rawQueue)
 	close(client.msgQueue)
-	client.conn.Close()
 	client.close <- struct{}{}
 }
 
@@ -169,8 +172,8 @@ func (client *BliveClient) heartBeat(ctx context.Context) {
 			return
 		default:
 			if err := client.send([]byte(""), model.HEARTBEAT); err != nil {
-				log.Println("heart error")
-				client.heartBeatErr <- err
+				log.Println("heart error", err)
+				//client.heartBeatErr <- err
 				return
 			}
 		}
@@ -277,6 +280,7 @@ func (client *BliveClient) handle(ctx context.Context) {
 			case DANMU_MSG:
 				info := gjson.GetBytes(msg.Buffer, "info").Array()
 				danmuMessage := model.ParaseMessage(info)
+				danmuMessage.RoomId = client.roomId
 				go client.handler.danmuku(ctx, *danmuMessage)
 				break
 			case SEND_GIFT:
@@ -286,6 +290,7 @@ func (client *BliveClient) handle(ctx context.Context) {
 					log.Printf("json 异常")
 					return
 				}
+				gift.RoomId = client.roomId
 				go client.handler.sendGift(ctx, gift)
 				break
 			case SUPER_CHAT_MESSAGE:
@@ -295,6 +300,7 @@ func (client *BliveClient) handle(ctx context.Context) {
 					log.Printf("json 异常")
 					return
 				}
+				sc.Roomid = client.roomId
 				go client.handler.superChat(ctx, sc)
 				break
 			case GUARD_BUY:
@@ -305,11 +311,20 @@ func (client *BliveClient) handle(ctx context.Context) {
 					log.Printf("json 异常")
 					return
 				}
+				guard.RoomId = client.roomId
 				go client.handler.buyGuard(ctx, guard)
+				break
+			case LIVE:
+				log.Println(LIVE, string(msg.Buffer))
+				break
+			case ROOM_REAL_TIME_MESSAGE_UPDATE:
+				break
+			case ROOM_CHANGE:
 				break
 			}
 
 		default:
+			log.Println(string(msg.Buffer))
 			break
 		}
 	}
