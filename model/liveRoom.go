@@ -333,6 +333,7 @@ type Certificate struct {
 
 // HeartbeatMessage 心跳消息
 type HeartbeatMessage struct {
+	Roomid     int
 	Popularity int32 //人气
 }
 

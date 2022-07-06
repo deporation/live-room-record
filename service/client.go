@@ -60,13 +60,15 @@ type BliveClient struct {
 	close             chan struct{}              // close client connection
 	heartBeatErr      chan error                 //心跳发送error
 	recieveErr        chan error                 //接收message的error
+	ctx               context.Context
+	Status            int //客户端状况
 }
 
 func (client *BliveClient) clientInit() {
 	//head := &http.Header{}
 	var roomInfo model.RoomInfo
 	err := httpClient.Get(ROOM_INIT_URL, nil, nil, map[string]string{"room_id": strconv.Itoa(client.roomId)}, &roomInfo)
-	if err != nil {
+	if err != nil && &roomInfo == nil {
 		panic(err)
 		return
 	}
@@ -115,13 +117,16 @@ func (client *BliveClient) clientInit() {
 }
 
 func (client *BliveClient) Close() {
-
-	client.conn.Close()
 	close(client.heartBeatErr)
 	close(client.recieveErr)
 	close(client.rawQueue)
 	close(client.msgQueue)
+	client.conn.Close()
 	client.close <- struct{}{}
+}
+
+func (client *BliveClient) Restart() {
+	go client.Start(client.roomId, client.handler)
 }
 
 func (client *BliveClient) Start(roomId int, handler Handler) error {
@@ -129,6 +134,7 @@ func (client *BliveClient) Start(roomId int, handler Handler) error {
 	client.clientInit()
 	client.handler = handler
 	ctx, cancel := context.WithCancel(context.Background())
+	client.ctx = ctx
 	defer cancel()
 
 	go client.heartBeat(ctx)
@@ -136,10 +142,14 @@ func (client *BliveClient) Start(roomId int, handler Handler) error {
 	go client.parse(ctx)
 	go client.handle(ctx)
 
+	client.Status = 1
+
 	select {
 	case err := <-client.heartBeatErr:
+		client.Status = -1
 		return err
 	case err := <-client.recieveErr:
+		client.Status = -1
 		return err
 	case <-ctx.Done():
 	case <-client.close:
@@ -168,12 +178,18 @@ func (client *BliveClient) send(data []byte, operate uint32) error {
 func (client *BliveClient) heartBeat(ctx context.Context) {
 	for {
 		select {
+		case <-ctx.Done():
+			return
 		case <-client.close:
 			return
 		default:
 			if err := client.send([]byte(""), model.HEARTBEAT); err != nil {
 				log.Println("heart error", err)
-				//client.heartBeatErr <- err
+				if client.Status == 0 {
+					return
+				}
+
+				client.heartBeatErr <- err
 				return
 			}
 		}
@@ -210,6 +226,9 @@ func (client *BliveClient) recieve(ctx context.Context) {
 				return
 			}
 			msg := &model.ReceiveMessage{Body: body}
+			if client.Status == 0 {
+				return
+			}
 			client.rawQueue <- msg
 		}
 	}
@@ -247,6 +266,9 @@ func (client *BliveClient) parse(ctx context.Context) {
 				continue
 			}
 			if len(buffer) > 0 {
+				if client.Status == 0 {
+					return
+				}
 				client.msgQueue <- &model.Context{Context: ctx, Operation: header.Operation, Buffer: buffer}
 			}
 		}
@@ -272,7 +294,7 @@ func (client *BliveClient) handle(ctx context.Context) {
 		case model.HEARTBEAT_REPLY:
 			var popular int32
 			_ = binary.Read(buffer, binary.BigEndian, &popular)
-			go client.handler.hearBeat(ctx, model.HeartbeatMessage{Popularity: popular})
+			go client.handler.hearBeat(ctx, model.HeartbeatMessage{Popularity: popular, Roomid: client.roomId})
 			break
 		case model.SEND_MSG_REPLY:
 			message := gjson.GetBytes(msg.Buffer, "cmd").String()

@@ -60,7 +60,7 @@ func Init() *BaseHandler {
 }
 
 func (handler *BaseHandler) hearBeat(ctx context.Context, message model.HeartbeatMessage) {
-	log.Printf("人气：%d", message.Popularity)
+	log.Printf("[%d] 人气：%d", message.Roomid, message.Popularity)
 }
 
 func (handler *BaseHandler) danmuku(ctx context.Context, message model.Message) {
