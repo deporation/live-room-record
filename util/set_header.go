@@ -3,7 +3,7 @@ package util
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/bilibili/live-room-record/model"
+	"github.com/deporation/live-room-record/model"
 )
 
 func SetHeader(operate uint32, data []byte) (*bytes.Buffer, error) {

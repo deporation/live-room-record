@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/bilibili/live-room-record/config"
-	"github.com/bilibili/live-room-record/http"
-	"github.com/bilibili/live-room-record/service"
+	"github.com/deporation/live-room-record/config"
+	"github.com/deporation/live-room-record/http"
+	"github.com/deporation/live-room-record/service"
 	"log"
 	"sync"
 )

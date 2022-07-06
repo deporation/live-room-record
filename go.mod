@@ -1,4 +1,4 @@
-module github.com/bilibili/live-room-record
+module github.com/deporation/live-room-record
 
 go 1.17
 

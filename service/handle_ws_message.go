@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/bilibili/live-room-record/config"
-	"github.com/bilibili/live-room-record/library/orm"
-	"github.com/bilibili/live-room-record/model"
+	"github.com/deporation/live-room-record/config"
+	"github.com/deporation/live-room-record/library/orm"
+	"github.com/deporation/live-room-record/model"
 	"github.com/fatih/color"
 	"log"
 	"strconv"
