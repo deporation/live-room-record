@@ -8,18 +8,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/andybalholm/brotli"
+	httpClient "github.com/bilibili/live-room-record/http"
+	"github.com/bilibili/live-room-record/model"
+	"github.com/bilibili/live-room-record/util"
 	"github.com/gorilla/websocket"
 	"github.com/tidwall/gjson"
 	"io"
-	httpClient "live-room/http"
-	"live-room/model"
-	"live-room/util"
 	"log"
 	"strconv"
 	"time"
 )
-
-var i, j, k int
 
 const (
 	ROOM_INIT_URL           = "https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom"
@@ -361,7 +359,6 @@ func zlibInflate(src []byte) []byte {
 }
 
 func brotliInflate(src []byte) []byte {
-	k++
 	b := bytes.NewReader(src)
 	r := brotli.NewReader(b)
 	res, err := io.ReadAll(r)
@@ -369,7 +366,5 @@ func brotliInflate(src []byte) []byte {
 		log.Fatal(err)
 		return nil
 	}
-	fmt.Println("brotli 解析", string(res))
-	fmt.Println("brotli 调用:", k)
 	return res
 }

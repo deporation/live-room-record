@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/bilibili/live-room-record/config"
+	"github.com/bilibili/live-room-record/library/orm"
+	"github.com/bilibili/live-room-record/model"
 	"github.com/fatih/color"
-	"live-room/config"
-	"live-room/library/orm"
-	"live-room/model"
 	"log"
 	"strconv"
 )
