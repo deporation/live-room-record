@@ -15,7 +15,7 @@ func main() {
 	clientMap := make(map[int]*service.BliveClient)
 
 	for _, val := range conf.LiveRoom {
-		go http.ListenRoomStart(val, 10)
+		go http.ListenRoomStart(val, 60)
 	}
 
 	var lockStop sync.Mutex

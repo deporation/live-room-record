@@ -167,15 +167,15 @@ type GiftMessage struct {
 type GuardMessage struct {
 	Cmd  string `json:"cmd"`
 	Data struct {
-		Uid        int    //用户id
-		UserName   string //用户名
-		GuardLevel int    //舰队等级，0非舰队，1总督，2提督，3舰长
-		Num        int    //数量
-		Price      int    //单价金瓜子数
-		GiftId     int    //礼物id
-		GiftName   string //礼物名
-		StartTime  int64  //开始时间戳
-		EndTime    int64  //结束时间戳
+		Uid        int    `json:"uid"`         //用户id
+		UserName   string `json:"username"`    //用户名
+		GuardLevel int    `json:"guard_level"` //舰队等级，0非舰队，1总督，2提督，3舰长
+		Num        int    `json:"num"`         //数量
+		Price      int    `json:"price"`       //单价金瓜子数
+		GiftId     int    `json:"gift_id"`     //礼物id
+		GiftName   string `json:"gift_name"`   //礼物名
+		StartTime  int64  `json:"start_time"`  //开始时间戳
+		EndTime    int64  `json:"end_time"`    //结束时间戳
 	} `json:"data"`
 	RoomId int
 }

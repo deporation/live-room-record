@@ -220,6 +220,9 @@ func (client *BliveClient) recieve(ctx context.Context) {
 					continue
 				}
 				log.Printf("RoomID=%d Read Message Error...", client.roomId)
+				if client.Status == 0 {
+					return
+				}
 				client.recieveErr <- err
 				return
 			}
@@ -327,6 +330,7 @@ func (client *BliveClient) handle(ctx context.Context) {
 				log.Println(string(msg.Buffer))
 				var guard model.GuardMessage
 				err := json.Unmarshal(msg.Buffer, &guard)
+				log.Println(guard.Data.StartTime, guard.Data.EndTime)
 				if err != nil {
 					log.Printf("json 异常")
 					return
