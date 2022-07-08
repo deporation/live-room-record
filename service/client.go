@@ -222,8 +222,9 @@ func (client *BliveClient) recieve(ctx context.Context) {
 				log.Printf("RoomID=%d Read Message Error...", client.roomId)
 				if client.Status == 0 {
 					return
+				}else if client.Status == 0 && err != nil {
+					client.recieveErr <- err
 				}
-				client.recieveErr <- err
 				return
 			}
 			msg := &model.ReceiveMessage{Body: body}
