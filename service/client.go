@@ -88,7 +88,7 @@ func (client *BliveClient) clientInit() {
 	for index, url := range danmuServer.Data.HostList {
 		client.conn, _, err = websocket.DefaultDialer.Dial(fmt.Sprintf("wss://%s:%d/sub", "broadcastlv.chat.bilibili.com", url.WssPort), nil)
 		if err != nil {
-			log.Printf("%dhost:%s，无法连接", index, url.Host)
+			log.Printf("%dhost:%s，无法连接", index, "broadcastlv.chat.bilibili.com")
 			continue
 		} else {
 			break
@@ -222,7 +222,7 @@ func (client *BliveClient) recieve(ctx context.Context) {
 				log.Printf("RoomID=%d Read Message Error...", client.roomId)
 				if client.Status == 0 {
 					return
-				}else if client.Status == 0 && err != nil {
+				} else if client.Status == 0 && err != nil {
 					client.recieveErr <- err
 				}
 				return
