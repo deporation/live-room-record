@@ -86,7 +86,7 @@ func (client *BliveClient) clientInit() {
 		return
 	}
 	for index, url := range danmuServer.Data.HostList {
-		client.conn, _, err = websocket.DefaultDialer.Dial(fmt.Sprintf("wss://%s:%d/sub", "broadcastlv.chat.bilibili.com", url.WssPort), nil)
+		client.conn, _, err = websocket.DefaultDialer.Dial(fmt.Sprintf("wss://%s:%d/sub", url.Host, url.WssPort), nil)
 		if err != nil {
 			log.Printf("%dhost:%s，无法连接", index, "broadcastlv.chat.bilibili.com")
 			continue
@@ -95,9 +95,8 @@ func (client *BliveClient) clientInit() {
 		}
 	}
 	auth := model.Auth{
-		UID:      0,
 		Roomid:   uint32(client.roomId),
-		Protover: 2,
+		Protover: 3,
 		Platform: "web",
 		Type:     2,
 		Key:      danmuServer.Data.Token,
