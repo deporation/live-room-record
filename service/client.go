@@ -295,7 +295,7 @@ func (client *BliveClient) handle(ctx context.Context) {
 		case model.HEARTBEAT_REPLY:
 			var popular int32
 			_ = binary.Read(buffer, binary.BigEndian, &popular)
-			go client.handler.hearBeat(ctx, model.HeartbeatMessage{Popularity: popular, Roomid: client.roomId})
+			go client.handler.heartBeat(ctx, model.HeartbeatMessage{Popularity: popular, Roomid: client.roomId})
 			break
 		case model.SEND_MSG_REPLY:
 			message := gjson.GetBytes(msg.Buffer, "cmd").String()

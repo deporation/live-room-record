@@ -18,7 +18,7 @@ var (
 )
 
 type Handler interface {
-	hearBeat(ctx context.Context, message model.HeartbeatMessage)  //心跳
+	heartBeat(ctx context.Context, message model.HeartbeatMessage) //心跳
 	danmuku(ctx context.Context, message model.Message)            //弹幕库
 	sendGift(ctx context.Context, message model.GiftMessage)       // 礼物
 	buyGuard(ctx context.Context, message model.GuardMessage)      // 航海服务
@@ -59,7 +59,7 @@ func Init() *BaseHandler {
 	}
 }
 
-func (handler *BaseHandler) hearBeat(ctx context.Context, message model.HeartbeatMessage) {
+func (handler *BaseHandler) heartBeat(ctx context.Context, message model.HeartbeatMessage) {
 	log.Printf("[%d] 人气：%d", message.Roomid, message.Popularity)
 }
 
